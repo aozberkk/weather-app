@@ -1,0 +1,147 @@
+.weather-charts {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  padding: 25px;
+  margin-bottom: 25px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.charts-title {
+  margin: 0 0 20px 0;
+  font-size: 20px;
+  font-weight: 600;
+  color: white;
+}
+
+.chart-container {
+  margin-bottom: 30px;
+}
+
+.chart-container:last-child {
+  margin-bottom: 0;
+}
+
+.chart-title {
+  margin: 0 0 15px 0;
+  font-size: 16px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.chart {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  gap: 10px;
+  height: 200px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+}
+
+.chart-bar-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  position: relative;
+}
+
+.chart-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.chart-bar {
+  flex: 1;
+  min-width: 8px;
+  border-radius: 4px 4px 0 0;
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.chart-bar:hover {
+  opacity: 0.8;
+  transform: scaleY(1.05);
+}
+
+.max-temp {
+  background: linear-gradient(to top, #ff6b6b, #ff8787);
+}
+
+.avg-temp {
+  background: linear-gradient(to top, #4ecdc4, #6edcd4);
+}
+
+.min-temp {
+  background: linear-gradient(to top, #95e1d3, #a8e8db);
+}
+
+.humidity-bar {
+  background: linear-gradient(to top, #667eea, #764ba2);
+  width: 100%;
+}
+
+.chart-label {
+  margin-top: 8px;
+  font-size: 11px;
+  color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+}
+
+.chart-values {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 5px;
+  font-size: 10px;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.temp-max {
+  color: #ff6b6b;
+  font-weight: 600;
+}
+
+.temp-min {
+  color: #95e1d3;
+  font-weight: 600;
+}
+
+.chart-value {
+  margin-top: 5px;
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.9);
+  font-weight: 500;
+}
+
+.humidity-chart .chart-bar-group {
+  max-width: 60px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 1023px) {
+  .weather-charts {
+    padding: 20px;
+  }
+
+  .chart {
+    height: 150px;
+    gap: 5px;
+  }
+
+  .chart-label {
+    font-size: 10px;
+  }
+
+  .chart-values {
+    font-size: 9px;
+  }
+}

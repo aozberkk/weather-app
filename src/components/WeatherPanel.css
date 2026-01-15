@@ -1,0 +1,84 @@
+.weather-panel {
+  position: relative;
+  overflow-y: auto;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background-size: cover;
+  background-position: center;
+  transition: background-image 0.8s ease-in-out;
+  animation: panelFadeIn 0.6s ease-out;
+}
+
+@keyframes panelFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.weather-panel-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  z-index: 0;
+}
+
+.weather-panel-content {
+  position: relative;
+  z-index: 1;
+  padding: 25px;
+  color: white;
+  height: 100%;
+  overflow-y: auto;
+}
+
+.weather-panel-empty {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  font-size: 18px;
+  opacity: 0.9;
+}
+
+.weather-map-container {
+  margin-bottom: 25px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* Scrollbar styling for weather panel */
+.weather-panel-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.weather-panel-content::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+}
+
+.weather-panel-content::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+}
+
+.weather-panel-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+/* Mobile adjustments */
+@media (max-width: 1023px) {
+  .weather-panel-content {
+    padding: 20px;
+  }
+
+  .weather-map-container {
+    margin-bottom: 20px;
+  }
+}

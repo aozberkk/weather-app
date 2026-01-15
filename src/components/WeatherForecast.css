@@ -1,0 +1,30 @@
+.weather-forecast {
+  margin-top: 25px;
+}
+
+.forecast-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: white;
+}
+
+.forecast-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 15px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 1023px) {
+  .forecast-cards {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    gap: 12px;
+  }
+
+  .forecast-title {
+    font-size: 18px;
+    margin-bottom: 15px;
+  }
+}
+
