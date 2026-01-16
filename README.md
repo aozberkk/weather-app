@@ -26,6 +26,7 @@ graph TD
     style MCP fill:#3776ab,stroke:#333,stroke-width:2px,color:white
     style n8n fill:#ff6d5a,stroke:#333,stroke-width:2px,color:white
     style External fill:#f1f1f1,stroke:#333,stroke-width:2px
+```
 
 Bu Projede MCP Nasıl Kullanılıyor?
 MCP Server (Python):
