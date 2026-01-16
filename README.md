@@ -2,7 +2,27 @@
 
 Bu proje, **Model Context Protocol (MCP)** mimarisini kullanarak geliştirilmiş modern bir yapay zeka asistanıdır. Google Gemini AI modelini, gerçek dünya verileriyle (Hava durumu, Görseller) buluşturur ve bunu otonom bir şekilde yönetir.
 
-![Architecture Diagram](https://mermaid.ink/img/pako:eNp1k01v2zAMhv8KoXMulh3bS9cNhqFbDzv0sGxAtyAvNlaRWFIkymnQ_z6q_IgD0yF9iCL58SMlVd6w1qzgfcf-Ea2F_WbdCjbz7c1682G9fbferlZ3q_XdfLX6sPq4uvm4erf6uPr848vnh_X3L_uX1erD-_W7b_v7P_u_q9XnL7vd_s--vF_df3n499fV6tO_L35wQdCcoSVQh5Y8Wj6T5zP0TmhL0DthKIET14b1kS1t78ihE4YjQeuE0QRdc4K-c-TSCeMI-s6RZ3JowtATdM0Jhu4EfR-F4UTQ91G4k4dO0A_k0JMjTy2Z28ieHJrI0EWGjhz6yJErGboK6FqgO0N3gq4EuhLoztCdQU-O7oKhu0DXAt0ZdCXQnaErge4MugvoLqC7gK4EegroKqCngK4CegroKqA7g54CuhLoKaArgZ4CuhLoKaArgZ4CeiroKqCngq4CeiroKqCngq4CeiroyNBVQE8FPRV0FdBVQVcBPVXkSF9Q_wP1P1D_A_WvoH4C9a-gfgL1r6B-AvU_UP8D9X9I_T-QY0uOrRybyLGNHNuQYxuObci5DTm3Iec25NyGnNuQcxvo3AZybiM5t5Gc20jObSTnNpJzG8m5jeTcRnJuozi3UZzbKM5tFOc2inMbxbmN4txGcW6jOLdRntsoz22U5zaKc5vi3KZwbkM5t6Gc21DObSjnNpRzG8q5DeXchnJuI7m2kVzbiN5tpN5tpN5tpN5tpN5tpN5tpN5tpN5tpN5tpN5t5N5t5N5t5N5t5N5tJOc2knMbybmN5NxGcm4jObeRnNtIzm0k5zaScxvJuY3k3EZybqM4t1Gc2yjObRTnNopzG8W5jeLcRnFuozj3P4FqF6s?type=png)
+![Architecture Diagram](```mermaid
+graph TD
+    Client[Frontend / React] -->|1. Chat Mesajı| Backend[Backend / Node.js]
+    Backend -->|2. Prompt + Geçmiş| AI[Google Gemini AI]
+    AI -.->|3. Tool Kullanma Kararı| Backend
+    Backend -->|4. JSON-RPC (stdio)| MCP[MCP Server / Python]
+    MCP -->|5. HTTP Webhook| n8n[n8n Workflows]
+    n8n -->|6. API İsteği| External[OpenWeather / Unsplash]
+    External -->|7. Ham Veri| n8n
+    n8n -->|8. İşlenmiş JSON| MCP
+    MCP -->|9. Tool Sonucu| Backend
+    Backend -->|10. Sonucu İlet| AI
+    AI -->|11. Final Yanıtı| Backend
+    Backend -->|12. Yanıtı Göster| Client
+    
+    style Client fill:#61dafb,stroke:#333,stroke-width:2px
+    style Backend fill:#68a063,stroke:#333,stroke-width:2px
+    style AI fill:#ea4335,stroke:#333,stroke-width:2px,color:white
+    style MCP fill:#3776ab,stroke:#333,stroke-width:2px,color:white
+    style n8n fill:#ff6d5a,stroke:#333,stroke-width:2px,color:white
+    style External fill:#f1f1f1,stroke:#333,stroke-width:2px)
 
 ## 🏗️ Proje Mimarisi
 
