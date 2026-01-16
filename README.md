@@ -2,7 +2,10 @@
 
 Bu proje, **Model Context Protocol (MCP)** mimarisini kullanarak geliştirilmiş modern bir yapay zeka asistanıdır. Google Gemini AI modelini, gerçek dünya verileriyle (Hava durumu, Görseller) buluşturur ve bunu otonom bir şekilde yönetir.
 
-![Architecture Diagram](```mermaid
+## 🏗️ Proje Mimarisi
+
+### İletişim Akışı
+```mermaid
 graph TD
     Client[Frontend / React] -->|1. Chat Mesajı| Backend[Backend / Node.js]
     Backend -->|2. Prompt + Geçmiş| AI[Google Gemini AI]
@@ -22,34 +25,24 @@ graph TD
     style AI fill:#ea4335,stroke:#333,stroke-width:2px,color:white
     style MCP fill:#3776ab,stroke:#333,stroke-width:2px,color:white
     style n8n fill:#ff6d5a,stroke:#333,stroke-width:2px,color:white
-    style External fill:#f1f1f1,stroke:#333,stroke-width:2px)
+    style External fill:#f1f1f1,stroke:#333,stroke-width:2px
 
-## 🏗️ Proje Mimarisi
+Bu Projede MCP Nasıl Kullanılıyor?
+MCP Server (Python):
 
-### Bu Projede MCP Nasıl Kullanılıyor?
+Konum: mcp-server/server.py
 
-1.  **MCP Server (Python):**
-    * **Konum:** `mcp-server/server.py`
-    * **Görevi:** Tool'ları tanımlar (`get_weather`, `get_city_image`, `get_weather_forecast`) ve n8n webhook'larına istek atar.
-    * **Teknoloji:** Python SDK, httpx (Async HTTP Client).
+Görevi: Tool'ları tanımlar (get_weather, get_city_image, get_weather_forecast) ve n8n webhook'larına istek atar.
 
-2.  **MCP Client (Node.js):**
-    * **Konum:** `backend/src/mcp-client.js`
-    * **Görevi:** Python sunucusunu `stdio` üzerinden çalıştırır ve yönetir. AI modelinin tool çağrılarını bu sunucuya iletir.
-    * **Teknoloji:** Node.js, Child Process.
+Teknoloji: Python SDK, httpx (Async HTTP Client).
 
-### İletişim Akışı
-```mermaid
-graph TD
-    A[Yapay Zeka Modeli] -->|Tool Çağrısı| B(Backend / MCP Client)
-    B -->|JSON-RPC via stdio| C(MCP Server / Python)
-    C -->|HTTP Request| D(n8n Webhook)
-    D -->|API Call| E[External APIs]
-    E -->|Response| D
-    D -->|Response| C
-    C -->|JSON-RPC Response| B
-    B -->|Final Content| A
-    A -->|Yanıt| F[Frontend / React]
+MCP Client (Node.js):
+
+Konum: backend/src/mcp-client.js
+
+Görevi: Python sunucusunu stdio üzerinden çalıştırır ve yönetir. AI modelinin tool çağrılarını bu sunucuya iletir.
+
+Teknoloji: Node.js, Child Process.
 
 🚀 Kurulum ve Başlangıç
 Gereksinimler
@@ -61,8 +54,9 @@ n8n (Lokal veya Cloud)
 
 Adım Adım Kurulum
 1. Projeyi Klonlayın
-git clone https://github.com/aozberkk/weather-app.git
+git clone [https://github.com/aozberkk/weather-app.git](https://github.com/aozberkk/weather-app.git)
 cd weather-app
+
 2. Backend Kurulumu
 cd backend
 npm install
@@ -70,15 +64,18 @@ npm install
 PORT=3001
 GEMINI_API_KEY=your_gemini_api_key
 N8N_WEBHOOK_BASE_URL=http://localhost:5678/webhook
+
 3. Frontend Kurulumu
 cd ../frontend
 npm install
+
 4. MCP Server Kurulumu
 cd ../mcp-server
 # Sanal ortam önerilir (Optional)
 python -m venv venv
 source venv/bin/activate # Windows: venv\Scripts\activate
 pip install -r requirements.txt
+
 5. n8n Workflow Kurulumu
 
 n8n-workflows/ klasöründeki 3 adet .json dosyasını n8n arayüzünden Import edin.
@@ -91,6 +88,7 @@ Projeyi tam kapasite çalıştırmak için 3 ayrı terminalde şu komutları ça
 Terminal 1 (Backend):
 cd backend
 npm start
+
 Terminal 2 (Frontend):
 cd frontend
 npm run dev
@@ -104,15 +102,47 @@ get_weather,Şehir için anlık hava durumu bilgisini getirir.,"{ ""city"": ""st
 get_city_image,Hava durumuna uygun atmosferik şehir görseli arar (Unsplash).,"{ ""search_query"": ""string"" }"
 get_weather_forecast,Şehir için 5 günlük detaylı hava tahminini getirir.,"{ ""city"": ""string"" }"
 
-🐛 Sorun Giderme (Troubleshooting)
-Hata: GEMINI_API_KEY environment variable is required
 
-Çözüm: backend/.env dosyasını kontrol edin ve API anahtarının doğru olduğundan emin olun.
 
-Hata: MCP Client not connected
 
-Çözüm: Python'un yüklü olduğunu ve mcp-server klasöründeki requirements.txt bağımlılıklarının kurulduğunu doğrulayın.
 
-Hata: Connection error... webhook/weather
 
-Çözüm: n8n'in çalıştığından (localhost:5678) ve workflow'ların Active (Yeşil) durumda olduğundan emin olun.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
