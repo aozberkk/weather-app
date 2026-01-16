@@ -1,32 +1,37 @@
+
+
 # 🌦️ AI Weather & Mood Assistant (Powered by MCP)
 
 Bu proje, **Model Context Protocol (MCP)** mimarisini kullanarak geliştirilmiş modern bir yapay zeka asistanıdır. Google Gemini AI modelini, gerçek dünya verileriyle (Hava durumu, Görseller) buluşturur ve bunu otonom bir şekilde yönetir.
 
 ## 🏗️ Proje Mimarisi
 
-### İletişim Akışı
-```mermaid
-graph TD
-    Client[Frontend / React] -->|1. Chat Mesajı| Backend[Backend / Node.js]
-    Backend -->|2. Prompt + Geçmiş| AI[Google Gemini AI]
-    AI -.->|3. Tool Kullanma Kararı| Backend
-    Backend -->|4. JSON-RPC (stdio)| MCP[MCP Server / Python]
-    MCP -->|5. HTTP Webhook| n8n[n8n Workflows]
-    n8n -->|6. API İsteği| External[OpenWeather / Unsplash]
-    External -->|7. Ham Veri| n8n
-    n8n -->|8. İşlenmiş JSON| MCP
-    MCP -->|9. Tool Sonucu| Backend
-    Backend -->|10. Sonucu İlet| AI
-    AI -->|11. Final Yanıtı| Backend
-    Backend -->|12. Yanıtı Göster| Client
-    
-    style Client fill:#61dafb,stroke:#333,stroke-width:2px
-    style Backend fill:#68a063,stroke:#333,stroke-width:2px
-    style AI fill:#ea4335,stroke:#333,stroke-width:2px,color:white
-    style MCP fill:#3776ab,stroke:#333,stroke-width:2px,color:white
-    style n8n fill:#ff6d5a,stroke:#333,stroke-width:2px,color:white
-    style External fill:#f1f1f1,stroke:#333,stroke-width:2px
-```
+### İletişim Akışı (Mimari Şeması)
+
+```text
+                                +-----------------+
+                                |  KULLANICI (UI) |
+                                +--------+--------+
+                                         |
+                                         v
++-----------------+            +---------+---------+            +-----------------+
+|  GOOGLE GEMINI  |<-----------|     BACKEND       |<-----------|    FRONTEND     |
+|       (AI)      |----------->| (Node.js/Express) |----------->|  (React + Vite) |
++-----------------+   Karar    +---------+---------+   Yanıt    +-----------------+
+                                         |
+                                         | (JSON-RPC via Stdio)
+                                         v
+                               +---------+---------+
+                               |    MCP SERVER     |
+                               |     (Python)      |
+                               +---------+---------+
+                                         |
+                                         | (HTTP Webhook)
+                                         v
++-----------------+            +---------+---------+
+|  EXTERNAL APIs  |<-----------|       n8n         |
+| (Weather/Image) |----------->|   (Workflows)     |
++-----------------+            +-------------------+
 
 Bu Projede MCP Nasıl Kullanılıyor?
 MCP Server (Python):
