@@ -1,0 +1,152 @@
+{
+  "name": "City Image Webhook",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "city-image",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "0774b1bb-9d5e-4234-81dd-8471237366e3",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [0, 0],
+      "webhookId": "city-image-webhook"
+    },
+    {
+      "parameters": {
+        "url": "https://api.unsplash.com/search/photos",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "query",
+              "value": "={{ $json.body.search_query }}"
+            },
+            {
+              "name": "per_page",
+              "value": "1"
+            },
+            {
+              "name": "orientation",
+              "value": "landscape"
+            }
+          ]
+        },
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Authorization",
+              "value": "Client-ID YOUR_UNSPLASH_ACCESS_KEY"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "5f6ff368-95f1-45bd-895d-5322ab21f7ce",
+      "name": "Unsplash API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [208, 0]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "extract-image-url",
+              "name": "image_url",
+              "value": "={{ $json.results[0].urls.regular }}",
+              "type": "string"
+            },
+            {
+              "id": "extract-full-url",
+              "name": "full_url",
+              "value": "={{ $json.results[0].urls.full }}",
+              "type": "string"
+            },
+            {
+              "id": "extract-thumb-url",
+              "name": "thumb_url",
+              "value": "={{ $json.results[0].urls.thumb }}",
+              "type": "string"
+            },
+            {
+              "id": "extract-description",
+              "name": "description",
+              "value": "={{ $json.results[0].description || $json.results[0].alt_description }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "96314da0-8ee2-4792-9e17-bb4c1a4afd3b",
+      "name": "Extract Image URL",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [400, 0]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "af0cc1b1-1f94-403d-a8cf-7844ed842cf2",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [608, 0]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Unsplash API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Unsplash API": {
+      "main": [
+        [
+          {
+            "node": "Extract Image URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Image URL": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "a79c04b6-2942-475b-a868-81478323234a",
+  "meta": {
+    "instanceId": "1279e9747186b946c4b23b4c47b8ea1a8cbe04561c067919e793b972d0b0b455"
+  },
+  "id": "uPCfVHfjoqvr6gzh",
+  "tags": []
+}

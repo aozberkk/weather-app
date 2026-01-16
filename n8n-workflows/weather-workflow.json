@@ -1,0 +1,165 @@
+{
+  "name": "Weather Webhook",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "weather",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "d5106f1a-a7a1-4f22-824f-5b1d27397653",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [0, 0],
+      "webhookId": "weather-webhook"
+    },
+    {
+      "parameters": {
+        "url": "https://api.openweathermap.org/data/2.5/weather",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{ $json.body.city }}"
+            },
+            {
+              "name": "appid",
+              "value": "YOUR_OPENWEATHERMAP_API_KEY"
+            },
+            {
+              "name": "units",
+              "value": "metric"
+            },
+            {
+              "name": "lang",
+              "value": "tr"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "59350ce3-84bf-4ee5-a183-86c72d0ee379",
+      "name": "OpenWeatherMap API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [208, 0]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "format-weather",
+              "name": "temperature",
+              "value": "={{ $json.main.temp }}",
+              "type": "number"
+            },
+            {
+              "id": "format-condition",
+              "name": "condition",
+              "value": "={{ $json.weather[0].description }}",
+              "type": "string"
+            },
+            {
+              "id": "format-humidity",
+              "name": "humidity",
+              "value": "={{ $json.main.humidity }}",
+              "type": "number"
+            },
+            {
+              "id": "format-city",
+              "name": "city",
+              "value": "={{ $json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "format-country",
+              "name": "country",
+              "value": "={{ $json.sys.country }}",
+              "type": "string"
+            },
+            {
+              "id": "format-feels-like",
+              "name": "feels_like",
+              "value": "={{ $json.main.feels_like }}",
+              "type": "number"
+            },
+            {
+              "id": "format-wind",
+              "name": "wind_speed",
+              "value": "={{ $json.wind.speed }}",
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "afac2c4a-d0f0-4efd-9ea7-35070e97bfeb",
+      "name": "Format Weather Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [400, 0]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "2746ad96-cd8d-42b3-b5d5-a2938026f5f8",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [608, 0]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "OpenWeatherMap API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenWeatherMap API": {
+      "main": [
+        [
+          {
+            "node": "Format Weather Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Weather Data": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "c081d785-e3aa-4890-b386-508555482b2e",
+  "meta": {
+    "instanceId": "1279e9747186b946c4b23b4c47b8ea1a8cbe04561c067919e793b972d0b0b455"
+  },
+  "id": "2Img0YcOl4g4DkLx",
+  "tags": []
+}

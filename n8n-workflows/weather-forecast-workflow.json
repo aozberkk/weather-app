@@ -1,0 +1,123 @@
+{
+  "name": "Weather Forecast Webhook",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "weather-forecast",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "d144793c-3814-44dd-b555-18113f00402e",
+      "name": "Webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [0, 0],
+      "webhookId": "weather-forecast-webhook"
+    },
+    {
+      "parameters": {
+        "url": "https://api.openweathermap.org/data/2.5/forecast",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "={{ $json.body.city }}"
+            },
+            {
+              "name": "appid",
+              "value": "YOUR_OPENWEATHERMAP_API_KEY"
+            },
+            {
+              "name": "units",
+              "value": "metric"
+            },
+            {
+              "name": "lang",
+              "value": "tr"
+            },
+            {
+              "name": "cnt",
+              "value": "40"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "94602b0c-b2fd-46a5-a127-6e9f47f21290",
+      "name": "OpenWeatherMap Forecast API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [208, 0]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Group forecasts by date and extract daily data\nconst forecasts = $input.all();\nconst listData = forecasts[0].json.list;\nconst cityInfo = forecasts[0].json.city;\n\n// Group by date (YYYY-MM-DD)\nconst dailyData = {};\n\nlistData.forEach(item => {\n  const date = item.dt_txt.split(' ')[0];\n  if (!dailyData[date]) {\n    dailyData[date] = {\n      date: date,\n      temps: [],\n      conditions: [],\n      humidity: [],\n      wind: []\n    };\n  }\n  dailyData[date].temps.push(item.main.temp);\n  dailyData[date].conditions.push(item.weather[0].description);\n  dailyData[date].humidity.push(item.main.humidity);\n  dailyData[date].wind.push(item.wind.speed);\n});\n\n// Calculate daily averages and pick most common condition\nconst dailyForecasts = Object.values(dailyData).slice(0, 5).map(day => {\n  const avgTemp = day.temps.reduce((a, b) => a + b, 0) / day.temps.length;\n  const minTemp = Math.min(...day.temps);\n  const maxTemp = Math.max(...day.temps);\n  const avgHumidity = day.humidity.reduce((a, b) => a + b, 0) / day.humidity.length;\n  const avgWind = day.wind.reduce((a, b) => a + b, 0) / day.wind.length;\n  \n  // Most common condition\n  const conditionCounts = {};\n  day.conditions.forEach(cond => {\n    conditionCounts[cond] = (conditionCounts[cond] || 0) + 1;\n  });\n  const mostCommonCondition = Object.keys(conditionCounts).reduce((a, b) => \n    conditionCounts[a] > conditionCounts[b] ? a : b\n  );\n  \n  return {\n    date: day.date,\n    temp_min: Math.round(minTemp * 10) / 10,\n    temp_max: Math.round(maxTemp * 10) / 10,\n    temp_avg: Math.round(avgTemp * 10) / 10,\n    condition: mostCommonCondition,\n    humidity: Math.round(avgHumidity),\n    wind_speed: Math.round(avgWind * 10) / 10\n  };\n});\n\nreturn {\n  city: cityInfo.name,\n  country: cityInfo.country,\n  lat: cityInfo.coord.lat,\n  lon: cityInfo.coord.lon,\n  forecasts: dailyForecasts\n};"
+      },
+      "id": "816bc7e3-34cf-4d1e-ab77-f13ba001e6aa",
+      "name": "Format Forecast Data",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [400, 0]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={{ $json }}",
+        "options": {}
+      },
+      "id": "5fad19bb-db76-4f60-a730-05cca7feb246",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.1,
+      "position": [608, 0]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "OpenWeatherMap Forecast API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenWeatherMap Forecast API": {
+      "main": [
+        [
+          {
+            "node": "Format Forecast Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Format Forecast Data": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "fcf71f89-dcd2-47e5-be57-33f6d449732f",
+  "meta": {
+    "instanceId": "1279e9747186b946c4b23b4c47b8ea1a8cbe04561c067919e793b972d0b0b455"
+  },
+  "id": "W3Hs7v1B106y6WsJ",
+  "tags": []
+}
